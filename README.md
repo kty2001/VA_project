@@ -4,9 +4,11 @@
 
 ```bash
 python -V # 3.10.12
+python -m pip install --upgrade pip==24.2
 pip install numpy==2.1.2
 pip install PyQt6==6.7.1
 pip install opencv-python==4.10.0.84
+pip install opencv-contrib-python==4.10.0.84
 pip install -U pyinstaller
 ```
 
