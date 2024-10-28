@@ -15,19 +15,16 @@ from PyQt6.QtWidgets import (
 class SpecialEffect(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('사진 특수 효과')
-        self.setGeometry(200, 200, 800, 200)
+        self.setWindowTitle('이미지 특수 효과')
+        self.setGeometry(200, 200, 600, 100)
 
-        selectBtn = QPushButton('사진 선택', self)
-        embossBtn = QPushButton('엠보싱', self)
-        cartoonBtn = QPushButton('카툰', self)
-        sketchBtn = QPushButton('연필 스케치', self)
-        oilBtn = QPushButton('유화', self)
-        saveBtn = QPushButton('저장하기', self)
+        selectBtn = QPushButton('이미지 선택', self)
+        self.saveBtn = QPushButton('저장하기', self)
         quitBtn = QPushButton('나가기', self)
-        self.label = QLabel('환영합니다!', self)
+        self.label = QLabel('환영합니다', self)
         self.pickCombo = QComboBox(self)
         self.pickCombo.addItems([
+            '효과 선택',
             '엠보싱',
             '카툰',
             '연필 스케치(명암)',
@@ -35,70 +32,93 @@ class SpecialEffect(QMainWindow):
             '유화'
         ])
 
-        selectBtn.setGeometry(10, 10, 100, 30)
-        embossBtn.setGeometry(110, 10, 100, 30)
-        cartoonBtn.setGeometry(210, 10, 100, 30)
-        sketchBtn.setGeometry(310, 10, 100, 30)
-        oilBtn.setGeometry(410, 10, 100, 30)
-        saveBtn.setGeometry(510, 10, 100, 30)
-        self.pickCombo.setGeometry(510, 40, 110, 30)
-        quitBtn.setGeometry(620, 10, 100, 30)
-        self.label.setGeometry(10, 40, 500, 170)
+        selectBtn.setGeometry(20, 20, 120, 40)
+        self.pickCombo.setGeometry(150, 20, 120, 40)
+        self.saveBtn.setGeometry(280, 20, 120, 40)
+        quitBtn.setGeometry(460, 20, 120, 40)
+        self.label.setGeometry(30, 70, 580, 20)
 
         selectBtn.clicked.connect(self.select_image)
-        embossBtn.clicked.connect(self.embossing_effect)
-        cartoonBtn.clicked.connect(self.cartoon_effect)
-        sketchBtn.clicked.connect(self.sketch_effect)
-        oilBtn.clicked.connect(self.oil_effect)
-        saveBtn.clicked.connect(self.image_save)
+        self.saveBtn.clicked.connect(self.image_save)
         quitBtn.clicked.connect(self.app_quit)
 
-    def select_image(self):
-        fname = QFileDialog.getOpenFileName(self, '사진 읽기', './assets')
-        self.img = cv.imread(fname[0])
-        if self.img is None: self.label.setText('파일을 찾을 수 없습니다.')
+        self.saveBtn.setEnabled(False)
+        self.pickCombo.setEnabled(False)
 
-        cv.imshow('Painting', self.img)
+        self.pickCombo.currentIndexChanged.connect(self.update_save_button)
+
+    def update_save_button(self):
+        if self.pickCombo.currentIndex() == 0:
+            self.saveBtn.setEnabled(False)
+
+        elif self.pickCombo.currentIndex() == 1:
+            self.embossing_effect()
+            self.saveBtn.setEnabled(True)
+
+        elif self.pickCombo.currentIndex() == 2:
+            self.cartoon_effect()
+            self.saveBtn.setEnabled(True)
+
+        elif self.pickCombo.currentIndex() == 3:
+            self.gray_sketch_effect()
+            self.saveBtn.setEnabled(True)
+
+        elif self.pickCombo.currentIndex() == 4:
+            self.color_sketch_effect()
+            self.saveBtn.setEnabled(True)
+
+        elif self.pickCombo.currentIndex() == 5:
+            self.oil_effect()
+            self.saveBtn.setEnabled(True)
+
+    def select_image(self):
+        fname = QFileDialog.getOpenFileName(self, '이미지 선택', './assets')
+        self.img = cv.imread(fname[0])
+        if self.img is None:
+            return self.label.setText('이미지 선택 실패')
+
+        self.pickCombo.setEnabled(True)
+        self.label.setText('원하는 특수 효과 선택')
+        cv.imshow('Original Image', self.img)
 
     def embossing_effect(self):
         femboss = np.array([[-1.0, 0.0, 0.0],
                             [0.0, 0.0, 0.0],
                             [0.0, 0.0, 1.0]])
 
-        gray_img = cv.cvtColor(self.img, cv.COLOR_BGR2GRAY)
-        gray16_img = np.int16(gray_img)
-        self.emboss_img = np.uint8(np.clip(cv.filter2D(gray16_img, -1, femboss) + 128, 0, 255))
-
-        cv.imshow('Emboss', self.emboss_img)
+        gray_img = np.int16(cv.cvtColor(self.img, cv.COLOR_BGR2GRAY))
+        self.emboss_img = np.uint8(np.clip(cv.filter2D(gray_img, -1, femboss) + 128, 0, 255))
+        cv.imshow('Effected Image', self.emboss_img)
 
     def cartoon_effect(self):
         self.cartoon_img = cv.stylization(self.img, sigma_s=60, sigma_r=0.45)
+        cv.imshow('Effected Image', self.cartoon_img)
 
-        cv.imshow('Cartoon', self.cartoon_img)
-
-    def sketch_effect(self):
-        self.sketch_img = cv.pencilSketch(self.img, sigma_s=60, sigma_r=0.07, shade_factor=0.02)
-
-        cv.imshow('Pencil sketch(gray)', self.sketch_img[0])
-        cv.imshow('Pencil sketch(color)', self.sketch_img[1])
+    def gray_sketch_effect(self):
+        self.gray_sketch_img = cv.pencilSketch(self.img, sigma_s=60, sigma_r=0.07, shade_factor=0.02)[0]
+        cv.imshow('Effected Image', self.gray_sketch_img)
+    
+    def color_sketch_effect(self):
+        self.color_sketch_img = cv.pencilSketch(self.img, sigma_s=60, sigma_r=0.07, shade_factor=0.02)[1]
+        cv.imshow('Effected Image', self.color_sketch_img)
 
     def oil_effect(self):
         self.oil_img = cv.xphoto.oilPainting(self.img, 10, 1, cv.COLOR_BGR2Lab)
-
-        cv.imshow('Oil painting', self.oil_img)
+        cv.imshow('Effected Image', self.oil_img)
 
     def image_save(self):
         save_dir = './outputs'
-
-        fname, _ = QFileDialog.getSaveFileName(self, '파일 저장', save_dir)
+        fname, _ = QFileDialog.getSaveFileName(self, '이미지 저장', save_dir)
         if len(fname.split(".")) == 1: fname = f'{fname}.png'
 
         i = self.pickCombo.currentIndex()
-        if i == 0: cv.imwrite(fname, self.emboss_img)
-        elif i == 1: cv.imwrite(fname, self.cartoon_img)
-        elif i == 2: cv.imwrite(fname, self.sketch_img[0])
-        elif i == 3: cv.imwrite(fname, self.sketch_img[1])
-        elif i == 4: cv.imwrite(fname, self.oil_img)
+        if i == 1: cv.imwrite(fname, self.emboss_img)
+        elif i == 2: cv.imwrite(fname, self.cartoon_img)
+        elif i == 3: cv.imwrite(fname, self.gray_sketch_img)
+        elif i == 4: cv.imwrite(fname, self.color_sketch_img)
+        elif i == 5: cv.imwrite(fname, self.oil_img)
+
+        self.label.setText('특수 효과 이미지 저장 완료')
 
     def app_quit(self):
         cv.destroyAllWindows()
