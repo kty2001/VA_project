@@ -52,3 +52,9 @@ python panorama.py
 ```bash
 python special_effect.py
 ```
+
+## 실행 파일 다운로드
+| 비전 에이전트 프로그램 | 다운로드 링크 | 파일 크기 |
+|--------------------------|----------|----------|
+| 파노라마 영상 제작 | [Google Drive](https://drive.google.com/file/d/1yTI9t5LnqXiZ8FX1i8Ge1Kkkf29AHjt-/view?usp=drive_link) | 244 MB |
+| 특수 효과 | [Google Drive](https://drive.google.com/file/d/1zu0EM1xTu7dYTTDPhHXqd4pfg4fIF2kL/view?usp=drive_link) | 85.9 MB |
