@@ -25,12 +25,13 @@ pip install ultralytics==8.3.26
 * [ ] 문서 작성
 
 ### 문서
-자세한 내용은 [여기](https://github.com/kty2001/VisionAgent_project/tree/main/docs/panorama.md)를 참조
+- 자세한 내용은 [여기](https://github.com/kty2001/VisionAgent_project/tree/main/docs/panorama.md)를 참조
 
 ### 실행
 ```bash
 python panorama.py
 ```
+
 
 ## [비전 에이전트 4] 특수 효과
 
@@ -45,7 +46,7 @@ python panorama.py
 * [ ] 문서 작성
 
 ### 문서
-자세한 내용은 [여기](https://github.com/kty2001/VisionAgent_project/tree/main/docs/special_effect.md)를 참조
+- 자세한 내용은 [여기](https://github.com/kty2001/VisionAgent_project/tree/main/docs/special_effect.md)를 참조
 
 ### 실행
 ```bash
