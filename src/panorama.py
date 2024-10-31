@@ -1,6 +1,8 @@
+import os
 import sys
 import winsound
 
+from ultralytics import YOLO
 import cv2 as cv
 import numpy as np
 from PyQt6.QtWidgets import (
@@ -21,39 +23,48 @@ class Panorama(QMainWindow):
         collectBtn = QPushButton('영상 수집', self)
         self.showBtn = QPushButton('영상 보기', self)
         self.stitchBtn = QPushButton('봉합', self)
-        self.saveBtn = QPushButton('저장', self)
+        self.segmentBtn = QPushButton('세그멘트', self)
+        self.pano_saveBtn = QPushButton('파노라마 이미지저장', self)
+        self.seg_saveBtn = QPushButton('세그멘테이션 이미지 저장', self)
         quitBtn = QPushButton('나가기', self)
         self.label = QLabel('환영합니다!', self)
 
         collectBtn.setGeometry(10, 25, 100, 30)
-        self.showBtn.setGeometry(110, 25, 100, 30)
+        self.showBtn.setGeometry(10, 55, 100, 30)
         self.stitchBtn.setGeometry(210, 25, 100, 30)
-        self.saveBtn.setGeometry(310, 25, 100, 30)
-        quitBtn.setGeometry(450, 25, 100, 30)
+        self.segmentBtn.setGeometry(210, 55, 100, 30)
+        self.pano_saveBtn.setGeometry(310, 25, 180, 30)
+        self.seg_saveBtn.setGeometry(310, 55, 180, 30)
+        quitBtn.setGeometry(590, 25, 100, 30)
         self.label.setGeometry(10, 70, 600, 170)
 
         self.showBtn.setEnabled(False)
         self.stitchBtn.setEnabled(False)
-        self.saveBtn.setEnabled(False)
+        self.segmentBtn.setEnabled(False)
+        self.pano_saveBtn.setEnabled(False)
+        self.seg_saveBtn.setEnabled(False)
 
-        collectBtn.clicked.connect(self.image_collect)
-        self.showBtn.clicked.connect(self.collected_image_show)
-        self.stitchBtn.clicked.connect(self.collected_image_stitch)
-        self.saveBtn.clicked.connect(self.stitched_image_save)
+        collectBtn.clicked.connect(self.collect_image)
+        self.showBtn.clicked.connect(self.show_collected_image)
+        self.stitchBtn.clicked.connect(self.stitch_collected_image)
+        self.segmentBtn.clicked.connect(self.segment_image)
+        self.pano_saveBtn.clicked.connect(self.stitched_image_save)
+        self.seg_saveBtn.clicked.connect(self.segmented_image_save)
         quitBtn.clicked.connect(self.app_quit)
         
 
-    def image_collect(self):
+    def collect_image(self):
         self.showBtn.setEnabled(False)
         self.stitchBtn.setEnabled(False)
-        self.saveBtn.setEnabled(False)
+        self.pano_saveBtn.setEnabled(False)
+        self.seg_saveBtn.setEnabled(False)
         self.label.setText('c를 여러 번 눌러 수집하고 끝나면 q를 눌러 비디오를 끕니다.')
 
         self.cap = cv.VideoCapture(0, cv.CAP_DSHOW)
         if not self.cap.isOpened():
             self.label.setText('카메라 연결 실패')
         else:
-            self.imgs = []
+            self.images = []
             while True:
                 ret, frame = self.cap.read()
                 if not ret: break
@@ -63,49 +74,97 @@ class Panorama(QMainWindow):
 
                 key = cv.waitKey(1)
                 if key == ord('c'):
-                    self.imgs.append(frame)
+                    self.images.append(frame)
                 elif key == ord('q'):
                     self.cap.release()
                     cv.destroyWindow('Video display')
                     break
             
-            if len(self.imgs) >= 2:
+            if len(self.images) >= 2:
                 self.showBtn.setEnabled(True)
                 self.stitchBtn.setEnabled(True)
-                self.saveBtn.setEnabled(True)
 
-            self.label.setText(f'수집된 영상은 {len(self.imgs)} 장입니다.')
+            self.label.setText(f'수집된 영상은 {len(self.images)} 장입니다.')
 
-    def collected_image_show(self):
-        stack = cv.resize(self.imgs[0], dsize=(0,0), fx=0.25, fy=0.25)
-        for i in range(1, len(self.imgs)):
-            stack = np.hstack((stack, cv.resize(self.imgs[i], dsize=(0,0), fx=0.25, fy=0.25)))
+    def show_collected_image(self):
+        stack = cv.resize(self.images[0], dsize=(0,0), fx=0.5, fy=0.5)
+        for i in range(1, len(self.images)):
+            stack = np.hstack((stack, cv.resize(self.images[i], dsize=(0,0), fx=0.5, fy=0.5)))
         cv.imshow('Image collection', stack)
         cv.moveWindow('Image collection', 200, 10)
 
-    def collected_image_stitch(self):
+    def stitch_collected_image(self):
         stitcher = cv.Stitcher.create()
-        status, self.img_stitched = stitcher.stitch(self.imgs)
+        status, self.stitched_image = stitcher.stitch(self.images)
         if status == cv.STITCHER_OK:
-            cv.imshow('Image stitched panorama', self.img_stitched)
+            cv.imshow('Image stitched panorama', self.stitched_image)
             cv.moveWindow('Image stitched panorama', 200, 410)
             self.label.setText("파노라마 이미지 제작 완료")
+            self.pano_saveBtn.setEnabled(True)
+            self.segmentBtn.setEnabled(True)
         else:
             winsound.Beep(1000, 500)
             self.label.setText("파노라마 이미지 제작 실패")
 
+    def segment_image(self):
+        try:
+            model = YOLO("../assets/yolo11n-seg.pt")
+            results = model(self.stitched_image)[0]
+
+            mask_data = results.masks.data
+
+            mask_image = np.max(mask_data.cpu().numpy(), axis=0).astype(np.uint8) * 255
+
+            mask_image = cv.cvtColor(mask_image, cv.COLOR_GRAY2BGR)
+            mask_image = cv.resize(mask_image, (self.stitched_image.shape[1], self.stitched_image.shape[0]))
+
+            self.segmented_image = cv.addWeighted(self.stitched_image, 0.5, mask_image, 0.5, 0)
+
+            cv.imshow("Segmented Image", self.segmented_image)
+
+            self.label.setText("세그멘테이션 이미지 제작 완료")
+            self.seg_saveBtn.setEnabled(True)
+
+        except:
+            self.label.setText("세그멘테이션 이미지 제작 실패")
+
     def stitched_image_save(self):
-        save_dir = './outputs'
+        try:
+            fname, _ = QFileDialog.getSaveFileName(self, '파일 저장', './')
+            file_name, file_extension = os.path.splitext(fname)
+            if not file_extension: file_extension = '.png'
+                
+            _, image_data = cv.imencode(file_extension, self.stitched_image)
 
-        fname, _ = QFileDialog.getSaveFileName(self, '파일 저장', save_dir)
-        if len(fname.split(".")) == 1: fname = f'{fname}.png'
-            
-        cv.imwrite(fname, self.img_stitched)
+            with open(f'{file_name}{file_extension}', 'wb') as f:
+                f.write(image_data)
 
-        self.label.setText(f"{save_dir} 디렉토리에 파노라마 이미지 저장 완료")
+            self.label.setText(f"파노라마 이미지 저장 완료")
+
+        except:
+            self.label.setText(f"파노라마 이미지 저장 실패")
+
+    def segmented_image_save(self):
+        try:
+            fname, _ = QFileDialog.getSaveFileName(self, '파일 저장', './')
+            file_name, file_extension = os.path.splitext(fname)
+            if not file_extension: file_extension = '.png'
+
+            _, image_data = cv.imencode(file_extension, self.segmented_image)
+            with open(f'{file_name}{file_extension}', 'wb') as f:
+                f.write(image_data)
+
+            self.label.setText(f"세그멘테이션 이미지 저장 완료")
+        
+        except:
+            self.label.setText(f"세그멘테이션 이미지 저장 실패")
 
     def app_quit(self):
-        self.cap.release()
+        try:
+            self.cap.release()
+        except:
+            pass
+
         cv.destroyAllWindows()
         self.close()
 

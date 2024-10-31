@@ -78,7 +78,7 @@ class SpecialEffect(QMainWindow):
             self.saveBtn.setEnabled(True)
 
     def select_image(self):
-        fname = QFileDialog.getOpenFileName(self, 'Select image', './')
+        fname = QFileDialog.getOpenFileName(self, 'Select Image', './')
         with open(fname[0], 'rb') as f:
             image_data = f.read()
 
@@ -125,7 +125,7 @@ class SpecialEffect(QMainWindow):
         cv.imshow('Effected Image', self.sepia_img)
 
     def save_image(self):
-        fname, _ = QFileDialog.getSaveFileName(self, '이미지 저장', './')
+        fname, _ = QFileDialog.getSaveFileName(self, 'Save Image', './')
         file_name, file_extension = os.path.splitext(fname)
         if not file_extension: file_extension = '.png'
 
@@ -141,7 +141,6 @@ class SpecialEffect(QMainWindow):
 
     def write_image(self, file_name, file_extension, img):
         _, image_data = cv.imencode(file_extension, img)
-        print(image_data)
 
         with open(f'{file_name}{file_extension}', 'wb') as f:
             f.write(image_data)
