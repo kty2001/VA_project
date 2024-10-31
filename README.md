@@ -1,21 +1,6 @@
 # 컴퓨터비전 과제 - Vision Agent Program Development
 
-## [비전 에이전트 3] 파노라마 영상 제작
-
-* [X] 라이브러리 설치
-* [X] 코드 작성
-* [ ] 프로그램 테스트
-* [ ] 실행파일 생성
-
-## [비전 에이전트 4] 특수 효과
-
-* [X] 라이브러리 설치
-* [X] 코드 작성
-* [ ] 프로그램 테스트
-* [ ] 실행파일 생성
-
-#### 외부 라이브러리 설치하기
-
+## 외부 라이브러리 설치
 ```bash
 python -V # 3.10.12
 python -m pip install --upgrade pip==24.2
@@ -23,6 +8,35 @@ pip install numpy==2.1.2
 pip install PyQt6==6.7.1
 pip install opencv-python==4.10.0.84
 pip install opencv-contrib-python==4.10.0.84
-pip install -U pyinstaller
+pip install -U pyinstaller==6.11.0
 pip install ultralytics==8.3.26
 ```
+
+## [비전 에이전트 3] 파노라마 영상 제작
+
+### 체크리스트
+* [X] 필요 라이브러리 확인
+* [X] 클론 코딩
+* [X] 기능 추가
+* [X] 프로그램 테스트
+* [X] 실행파일 생성
+* [X] 실행파일 테스트
+* [X] 오류 수정
+* [ ] 문서 작성
+
+### 실행
+```bash
+```
+
+## [비전 에이전트 4] 특수 효과
+
+* [X] 필요 라이브러리 확인
+* [X] 클론 코딩
+* [X] 기능 추가
+* [X] 프로그램 테스트
+* [X] 실행파일 생성
+* [X] 실행파일 테스트
+* [X] 오류 수정
+* [ ] 문서 작성
+
+

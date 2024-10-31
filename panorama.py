@@ -108,7 +108,7 @@ class Panorama(QMainWindow):
 
     def segment_image(self):
         try:
-            model = YOLO("../assets/yolo11n-seg.pt")
+            model = YOLO("assets/yolo11n-seg.pt")
             results = model(self.stitched_image)[0]
 
             mask_data = results.masks.data
