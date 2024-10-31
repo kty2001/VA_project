@@ -1,0 +1,21 @@
+[project]
+name = "VisionAgent_project"
+version = "0.1.0"
+authors = [
+    {name = "Tae-yoon Kim", email = "tyyoujungzz@naver.com"}
+]
+description = "비전 에이전트 프로그램 개발 과제"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.10"
+
+[project.dependencies]
+numpy = "2.1.2"
+opencv-python = "4.10.0.84"
+opencv-contrib-python = "4.10.0.84"
+PyQt6 = "6.7.1"
+pyinstaller = "6.11.0"
+ultralytics = "8.3.26"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

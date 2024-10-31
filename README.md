@@ -8,7 +8,7 @@ pip install numpy==2.1.2
 pip install PyQt6==6.7.1
 pip install opencv-python==4.10.0.84
 pip install opencv-contrib-python==4.10.0.84
-pip install -U pyinstaller==6.11.0
+pip install pyinstaller==6.11.0
 pip install ultralytics==8.3.26
 ```
 
@@ -31,7 +31,6 @@ pip install ultralytics==8.3.26
 ```bash
 python panorama.py
 ```
-
 
 ## [비전 에이전트 4] 특수 효과
 
