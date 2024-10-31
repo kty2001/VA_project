@@ -1,5 +1,7 @@
 # 컴퓨터비전 과제 - Vision Agent Program Development
 
+## [비전 에이전트 4] 특수 효과
+
 ### 외부 라이브러리 설치하기
 
 ```bash
@@ -12,7 +14,7 @@ pip install opencv-contrib-python==4.10.0.84
 pip install -U pyinstaller
 ```
 
-[O] 라이브러리 설치
-[O] 코드 작성
-[X] 프로그램 테스트
-[X] 실행파일 생성
+* [X] 라이브러리 설치
+* [X] 코드 작성
+* [ ] 프로그램 테스트
+* [ ] 실행파일 생성
