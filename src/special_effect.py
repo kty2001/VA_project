@@ -1,3 +1,4 @@
+import os
 import sys
 
 import cv2 as cv
@@ -29,7 +30,8 @@ class SpecialEffect(QMainWindow):
             '카툰',
             '연필 스케치(명암)',
             '연필 스케치(컬러)',
-            '유화'
+            '유화',
+            '세피아'
         ])
 
         selectBtn.setGeometry(20, 20, 120, 40)
@@ -39,7 +41,7 @@ class SpecialEffect(QMainWindow):
         self.label.setGeometry(30, 70, 580, 20)
 
         selectBtn.clicked.connect(self.select_image)
-        self.saveBtn.clicked.connect(self.image_save)
+        self.saveBtn.clicked.connect(self.save_image)
         quitBtn.clicked.connect(self.app_quit)
 
         self.saveBtn.setEnabled(False)
@@ -71,11 +73,21 @@ class SpecialEffect(QMainWindow):
             self.oil_effect()
             self.saveBtn.setEnabled(True)
 
+        elif self.pickCombo.currentIndex() == 6:
+            self.sepia_effect()
+            self.saveBtn.setEnabled(True)
+
     def select_image(self):
-        fname = QFileDialog.getOpenFileName(self, '이미지 선택', './assets')
-        self.img = cv.imread(fname[0])
+        fname = QFileDialog.getOpenFileName(self, 'Select image', './')
+        with open(fname[0], 'rb') as f:
+            image_data = f.read()
+
+        np_array = np.frombuffer(image_data, np.uint8)
+        self.img = cv.imdecode(np_array, cv.IMREAD_COLOR)
+        
         if self.img is None:
-            return self.label.setText('이미지 선택 실패')
+            self.label.setText('이미지 선택 실패')
+            return 
 
         self.pickCombo.setEnabled(True)
         self.label.setText('원하는 특수 효과 선택')
@@ -85,7 +97,6 @@ class SpecialEffect(QMainWindow):
         femboss = np.array([[-1.0, 0.0, 0.0],
                             [0.0, 0.0, 0.0],
                             [0.0, 0.0, 1.0]])
-
         gray_img = np.int16(cv.cvtColor(self.img, cv.COLOR_BGR2GRAY))
         self.emboss_img = np.uint8(np.clip(cv.filter2D(gray_img, -1, femboss) + 128, 0, 255))
         cv.imshow('Effected Image', self.emboss_img)
@@ -106,19 +117,34 @@ class SpecialEffect(QMainWindow):
         self.oil_img = cv.xphoto.oilPainting(self.img, 10, 1, cv.COLOR_BGR2Lab)
         cv.imshow('Effected Image', self.oil_img)
 
-    def image_save(self):
-        save_dir = './outputs'
-        fname, _ = QFileDialog.getSaveFileName(self, '이미지 저장', save_dir)
-        if len(fname.split(".")) == 1: fname = f'{fname}.png'
+    def sepia_effect(self):
+        sepia_kernel = np.array([[0.272, 0.534, 0.131],
+                        [0.349, 0.686, 0.168],
+                        [0.393, 0.769, 0.189]])
+        self.sepia_img = cv.transform(self.img, sepia_kernel)
+        cv.imshow('Effected Image', self.sepia_img)
+
+    def save_image(self):
+        fname, _ = QFileDialog.getSaveFileName(self, '이미지 저장', './')
+        file_name, file_extension = os.path.splitext(fname)
+        if not file_extension: file_extension = '.png'
 
         i = self.pickCombo.currentIndex()
-        if i == 1: cv.imwrite(fname, self.emboss_img)
-        elif i == 2: cv.imwrite(fname, self.cartoon_img)
-        elif i == 3: cv.imwrite(fname, self.gray_sketch_img)
-        elif i == 4: cv.imwrite(fname, self.color_sketch_img)
-        elif i == 5: cv.imwrite(fname, self.oil_img)
+        if i == 1: self.write_image(file_name, file_extension, self.emboss_img)
+        elif i == 2: self.write_image(file_name, file_extension, self.cartoon_img)
+        elif i == 3: self.write_image(file_name, file_extension, self.gray_sketch_img)
+        elif i == 4: self.write_image(file_name, file_extension, self.color_sketch_img)
+        elif i == 5: self.write_image(file_name, file_extension, self.oil_img)
+        elif i == 6: self.write_image(file_name, file_extension, self.sepia_img)
 
         self.label.setText('특수 효과 이미지 저장 완료')
+
+    def write_image(self, file_name, file_extension, img):
+        _, image_data = cv.imencode(file_extension, img)
+        print(image_data)
+
+        with open(f'{file_name}{file_extension}', 'wb') as f:
+            f.write(image_data)
 
     def app_quit(self):
         cv.destroyAllWindows()
