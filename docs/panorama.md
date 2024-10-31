@@ -26,3 +26,6 @@
 6. 이미지 저장 시 폴더 혹은 파일명에 한글 들어가도 오류 발생하지 않도록 수정
 
 7. QLabel의 텍스트 내용 추가
+
+## 실행 파일 다운로드
+실행 파일(.exe) [다운로드](https://drive.google.com/file/d/1yTI9t5LnqXiZ8FX1i8Ge1Kkkf29AHjt-/view?usp=drive_link)(244MB)

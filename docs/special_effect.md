@@ -27,3 +27,6 @@
 7. 콤보 박스로 필터 선택 시 저장 버튼 활성화
 
 8. QLabel의 텍스트 내용 추가
+
+## 실행 파일 다운로드
+실행 파일(.exe) [다운로드](https://drive.google.com/file/d/1zu0EM1xTu7dYTTDPhHXqd4pfg4fIF2kL/view?usp=drive_link)(85.9MB)

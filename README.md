@@ -22,7 +22,7 @@ pip install ultralytics==8.3.26
 * [X] 실행파일 생성
 * [X] 실행파일 테스트
 * [X] 오류 수정
-* [V] 문서 작성
+* [X] 문서 작성
 
 ### 문서
 - 자세한 내용은 [여기](https://github.com/kty2001/VisionAgent_project/tree/main/docs/panorama.md)를 참조
