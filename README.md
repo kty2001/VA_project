@@ -12,7 +12,7 @@ pip install opencv-contrib-python==4.10.0.84
 pip install -U pyinstaller
 ```
 
-* [O] 라이브러리 설치
-* [O] 코드 작성
-* [X] 프로그램 테스트
-* [X] 실행파일 생성
+[O] 라이브러리 설치
+[O] 코드 작성
+[X] 프로그램 테스트
+[X] 실행파일 생성
