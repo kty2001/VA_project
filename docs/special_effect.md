@@ -29,4 +29,4 @@
 8. QLabel의 텍스트 내용 추가
 
 ## 실행 파일 다운로드
-실행 파일(.exe) [다운로드](https://drive.google.com/file/d/1zu0EM1xTu7dYTTDPhHXqd4pfg4fIF2kL/view?usp=drive_link)(85.9MB)
+실행 파일(.exe) [다운로드](https://drive.google.com/file/d/1zu0EM1xTu7dYTTDPhHXqd4pfg4fIF2kL/view?usp=sharing)(85.9MB)

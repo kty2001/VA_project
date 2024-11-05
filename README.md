@@ -70,4 +70,4 @@ pyinstaller -w -F special_effect.py
 | 비전 에이전트 프로그램 | 다운로드 링크 | 파일 크기 |
 |--------------------------|----------|----------|
 | 파노라마 영상 제작 | [Google Drive](https://drive.google.com/file/d/1nFmUHVnfCWFD4EqcLC-DcNbzDi1UHLAv/view?usp=sharing) | 249.7 MB |
-| 특수 효과 | [Google Drive](https://drive.google.com/file/d/1zu0EM1xTu7dYTTDPhHXqd4pfg4fIF2kL/view?usp=drive_link) | 85.9 MB |
+| 특수 효과 | [Google Drive](https://drive.google.com/file/d/1zu0EM1xTu7dYTTDPhHXqd4pfg4fIF2kL/view?usp=sharing) | 85.9 MB |
