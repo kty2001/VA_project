@@ -28,11 +28,13 @@ pip install ultralytics==8.3.26
 - 자세한 내용은 [여기](https://github.com/kty2001/VisionAgent_project/tree/main/docs/panorama.md)를 참조
 
 ### 실행
+- 루트 디렉토리에서 커맨드 실행
 ```bash
 python panorama.py
 ```
 ### 실행 파일 생성
-루트 디렉토리에서 커맨드 실행
+- 루트 디렉토리에서 커맨드 실행
+- panorama.py 먼저 실행시켜 yolo 가중치 먼저 다운받아야 함
 ```bash
 pyinstaller -w -F --add-data "assets/yolo11n-seg.pt;assets" panorama.py
 ```
@@ -54,12 +56,12 @@ pyinstaller -w -F --add-data "assets/yolo11n-seg.pt;assets" panorama.py
 - 자세한 내용은 [여기](https://github.com/kty2001/VisionAgent_project/tree/main/docs/special_effect.md)를 참조
 
 ### 실행
-루트 디렉토리에서 커맨드 실행
+- 루트 디렉토리에서 커맨드 실행
 ```bash
 python special_effect.py
 ```
 ### 실행 파일 생성
-루트 디렉토리에서 커맨드 실행
+- 루트 디렉토리에서 커맨드 실행
 ```bash
 pyinstaller -w -F special_effect.py
 ```
