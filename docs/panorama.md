@@ -1,4 +1,6 @@
 # [비전 에이전트 3] 파노라마 영상 제작
+파일이 굉장히 무거워 실행에 약 15초 가량의 시간이 필요
+세그멘테이션 기능이 너무나 굉장히 무거워 실행에 약 60초 가량의 시간이 필요
 
 ## 기존 내용
 1. 캠 화면에서 실시간으로 이미지 수집
@@ -28,4 +30,4 @@
 7. QLabel의 텍스트 내용 추가
 
 ## 실행 파일 다운로드
-실행 파일(.exe) [다운로드](https://drive.google.com/file/d/1yTI9t5LnqXiZ8FX1i8Ge1Kkkf29AHjt-/view?usp=drive_link)(244MB)
+실행 파일(.exe) [다운로드](https://drive.google.com/file/d/1nFmUHVnfCWFD4EqcLC-DcNbzDi1UHLAv/view?usp=sharing)(249.7MB)
