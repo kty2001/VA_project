@@ -62,6 +62,7 @@ python special_effect.py
 루트 디렉토리에서 커맨드 실행
 ```bash
 pyinstaller -w -F special_effect.py
+```
 
 ## 실행 파일 다운로드
 | 비전 에이전트 프로그램 | 다운로드 링크 | 파일 크기 |
