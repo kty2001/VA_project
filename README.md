@@ -12,6 +12,12 @@ pip install pyinstaller==6.11.0
 pip install ultralytics==8.3.26
 ```
 
+or
+
+```bash
+pip install -r requirements.txt
+```
+
 ## [비전 에이전트 3] 파노라마 영상 제작
 
 ### 체크리스트
